@@ -1,38 +1,50 @@
 import React from "react";
 import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
 import "./styles.css";
+import api from "../../services/api";
 
-export default function TeacherItem() {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string;
+  subject: string;
+  whastapp: string;
+}
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post("connections", { user_id: teacher.id });
+  }
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://lh3.googleusercontent.com/ogw/ADGmqu-VtjzgaojKl0NQHRiqgYfYvZHUSYSqJW2a2I8f=s83-c-mo"
-          alt=""
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Cristiano Horn</strong>
-          <span>Química</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industp
-        into electronic typesetting, remaining essentially unchanged.
-        <br />
-        <br />
-        It was popularised in the 1960s with the release of Letraset sheets
-        containing Lorem Ip Ipsum.
-      </p>
+      <p>{teacher.bio}</p>
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 120,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a
+          href={`https://wa.me/${teacher.whastapp}`}
+          onClick={createNewConnection}
+          target="_blank"
+        >
           <img src={whatsappIcon} alt="Whatasapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
+
+export default TeacherItem;
